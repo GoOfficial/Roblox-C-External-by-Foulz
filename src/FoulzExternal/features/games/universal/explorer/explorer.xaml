@@ -1,0 +1,66 @@
+<UserControl x:Class="FoulzExternal.features.games.universal.explorer.ExplorerControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             Height="Auto" Width="Auto">
+	<UserControl.Resources>
+		<LinearGradientBrush x:Key="hdr_grad" StartPoint="0,0" EndPoint="1,1">
+			<GradientStop Color="White" Offset="0"/>
+			<GradientStop Color="#BFC3C6" Offset="1"/>
+		</LinearGradientBrush>
+		<LinearGradientBrush x:Key="item_grad" StartPoint="0,0" EndPoint="1,1">
+			<GradientStop Color="#F6F6F6" Offset="0"/>
+			<GradientStop Color="#D0D4D6" Offset="1"/>
+		</LinearGradientBrush>
+		<Style TargetType="TreeViewItem" x:Key="tree_style">
+			<Setter Property="Foreground" Value="{StaticResource item_grad}"/>
+			<Setter Property="Background" Value="Transparent"/>
+			<Setter Property="Padding" Value="2"/>
+			<Style.Triggers>
+				<Trigger Property="IsSelected" Value="True">
+					<Setter Property="Background" Value="Transparent"/>
+				</Trigger>
+				<Trigger Property="IsMouseOver" Value="True">
+					<Setter Property="Background" Value="#08FFFFFF"/>
+				</Trigger>
+			</Style.Triggers>
+		</Style>
+	</UserControl.Resources>
+
+	<Border BorderBrush="#111" BorderThickness="1" Background="#080808" CornerRadius="6" Padding="8">
+		<Grid>
+			<Grid.RowDefinitions>
+				<RowDefinition Height="34"/>
+				<RowDefinition Height="*"/>
+			</Grid.RowDefinitions>
+
+			<Border Background="#0B0B0B" CornerRadius="4">
+				<TextBlock Text="EXPLORER" VerticalAlignment="Center" Margin="12,0,0,0" FontSize="11" FontWeight="Bold" Foreground="{StaticResource hdr_grad}"/>
+			</Border>
+
+			<Grid Grid.Row="1" Margin="0,5,0,0">
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="2*"/>
+					<ColumnDefinition Width="1.2*"/>
+				</Grid.ColumnDefinitions>
+
+				<ScrollViewer Grid.Column="0" Background="#070707" VerticalScrollBarVisibility="Hidden">
+					<TreeView x:Name="tree" Background="Transparent" BorderThickness="0" ItemContainerStyle="{StaticResource tree_style}"/>
+				</ScrollViewer>
+
+				<Border Grid.Column="1" Background="#0A0A0A" CornerRadius="6" Padding="10" Margin="8,0,0,0" BorderBrush="#111" BorderThickness="1">
+					<StackPanel>
+						<TextBlock Text="Properties" FontWeight="Bold" Foreground="White" Margin="0,0,0,10" FontSize="12"/>
+						<TextBlock Text="Name" Foreground="#777" FontSize="10"/>
+						<TextBlock x:Name="p_name" Text="-" Foreground="White" Margin="0,0,0,8"/>
+						<TextBlock Text="Class" Foreground="#777" FontSize="10"/>
+						<TextBlock x:Name="p_class" Text="-" Foreground="White" Margin="0,0,0,8"/>
+						<TextBlock Text="Address" Foreground="#777" FontSize="10"/>
+						<TextBlock x:Name="p_addr" Text="-" Foreground="#FFD799" Margin="0,0,0,8" FontSize="10"/>
+						<TextBlock Text="Health" Foreground="#777" FontSize="10"/>
+						<TextBlock x:Name="p_hp" Text="-" Foreground="White"/>
+					</StackPanel>
+				</Border>
+			</Grid>
+		</Grid>
+	</Border>
+</UserControl>

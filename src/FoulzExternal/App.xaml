@@ -1,0 +1,188 @@
+﻿<Application x:Class="FoulzExternal.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             StartupUri="MainWindow.xaml">
+    <Application.Resources>
+        <Color x:Key="AccentColor">#FFFFFF</Color>
+        <SolidColorBrush x:Key="AccentBrush" Color="{DynamicResource AccentColor}"/>
+
+        <SolidColorBrush x:Key="BackgroundBrush" Color="#050505"/>
+        <SolidColorBrush x:Key="ControlBrush" Color="#0A0A0A"/>
+        <SolidColorBrush x:Key="BorderBrush" Color="#151515"/>
+
+        <Style x:Key="tabz_cuh" TargetType="RadioButton">
+            <Setter Property="Height" Value="35"/>
+            <Setter Property="Padding" Value="20,0"/>
+            <Setter Property="Foreground" Value="#444"/>
+            <Setter Property="FontSize" Value="11"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="RadioButton">
+                        <Border x:Name="bdr" Background="Transparent" BorderBrush="Transparent" BorderThickness="0,0,0,2">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter Property="Foreground" Value="{DynamicResource AccentBrush}"/>
+                                <Setter TargetName="bdr" Property="BorderBrush" Value="{DynamicResource AccentBrush}"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Foreground" Value="#AAA"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="toggle_vibe" TargetType="ToggleButton">
+            <Setter Property="Background" Value="#080808"/>
+            <Setter Property="Foreground" Value="#333"/>
+            <Setter Property="FontSize" Value="9"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ToggleButton">
+                        <Border x:Name="main_bg" Background="{TemplateBinding Background}" CornerRadius="6" BorderBrush="#181818" BorderThickness="1">
+                            <Grid>
+                                <Ellipse x:Name="ball" Fill="#222" Width="8" Height="8" HorizontalAlignment="Left" Margin="8,0">
+                                    <Ellipse.Effect>
+                                        <DropShadowEffect ShadowDepth="0" BlurRadius="0" Color="Transparent"/>
+                                    </Ellipse.Effect>
+                                </Ellipse>
+                                <ContentPresenter HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,12,0"/>
+                            </Grid>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="main_bg" Property="BorderBrush" Value="{DynamicResource AccentBrush}"/>
+                                <Setter Property="Foreground" Value="{DynamicResource AccentBrush}"/>
+                                <Setter TargetName="ball" Property="Fill" Value="{DynamicResource AccentBrush}"/>
+                                <Setter TargetName="ball" Property="Effect">
+                                    <Setter.Value>
+                                        <DropShadowEffect Color="{DynamicResource AccentColor}" BlurRadius="10" ShadowDepth="0"/>
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="main_bg" Property="Background" Value="#0C0C0C"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="axiom_btn_bruh" TargetType="Button">
+            <Setter Property="Background" Value="#080808"/>
+            <Setter Property="Foreground" Value="Gray"/>
+            <Setter Property="FontSize" Value="10"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="b" Background="{TemplateBinding Background}" BorderBrush="#181818" BorderThickness="1" CornerRadius="6">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="b" Property="BorderBrush" Value="{DynamicResource AccentBrush}"/>
+                                <Setter Property="Foreground" Value="{DynamicResource AccentBrush}"/>
+                                <Setter TargetName="b" Property="Effect">
+                                    <Setter.Value>
+                                        <DropShadowEffect Color="{DynamicResource AccentColor}" BlurRadius="15" Opacity="0.2" ShadowDepth="0"/>
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <ControlTemplate x:Key="color_dot_cuh" TargetType="Button">
+            <Border x:Name="circle" Width="16" Height="16" CornerRadius="8" Background="{TemplateBinding Background}" BorderThickness="0" Cursor="Hand" Margin="0,0,8,0">
+                <Border.Effect>
+                    <DropShadowEffect ShadowDepth="0" BlurRadius="5" Opacity="0.4" Color="{Binding Background.Color, RelativeSource={RelativeSource TemplatedParent}}"/>
+                </Border.Effect>
+            </Border>
+            <ControlTemplate.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter TargetName="circle" Property="RenderTransform">
+                        <Setter.Value>
+                            <ScaleTransform ScaleX="1.2" ScaleY="1.2" CenterX="8" CenterY="8"/>
+                        </Setter.Value>
+                    </Setter>
+                </Trigger>
+            </ControlTemplate.Triggers>
+        </ControlTemplate>
+
+        <Style x:Key="slider_chill" TargetType="Slider">
+            <Setter Property="Background" Value="#111"/>
+            <Setter Property="Foreground" Value="{DynamicResource AccentBrush}"/>
+            <Setter Property="IsSelectionRangeEnabled" Value="True"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Slider">
+                        <Grid VerticalAlignment="Center">
+                            <Border Name="Track" Background="{TemplateBinding Background}" Height="4" CornerRadius="2" VerticalAlignment="Center"/>
+                            <Canvas Height="4" VerticalAlignment="Center">
+                                <Rectangle Name="PART_SelectionRange" Fill="{TemplateBinding Foreground}" Height="4" RadiusX="2" RadiusY="2" Visibility="Visible"/>
+                            </Canvas>
+                            <Track Name="PART_Track">
+                                <Track.Thumb>
+                                    <Thumb>
+                                        <Thumb.Template>
+                                            <ControlTemplate>
+                                                <Grid>
+                                                    <Ellipse Width="12" Height="12" Fill="White">
+                                                        <Ellipse.Effect>
+                                                            <DropShadowEffect ShadowDepth="0" BlurRadius="4" Opacity="0.3"/>
+                                                        </Ellipse.Effect>
+                                                    </Ellipse>
+                                                </Grid>
+                                            </ControlTemplate>
+                                        </Thumb.Template>
+                                    </Thumb>
+                                </Track.Thumb>
+                            </Track>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Foreground" Value="{DynamicResource AccentBrush}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="icon_btn_chill" TargetType="Button">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="#555"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Foreground" Value="{DynamicResource AccentBrush}"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter Property="Opacity" Value="0.7"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Application.Resources>
+</Application>

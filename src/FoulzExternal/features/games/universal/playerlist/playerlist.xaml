@@ -1,0 +1,65 @@
+<UserControl x:Class="FoulzExternal.features.games.universal.playerlist.PlayerListControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             Height="Auto" Width="Auto">
+	<UserControl.Resources>
+		<Style x:Key="btn_style" TargetType="Button">
+			<Setter Property="Background" Value="#111"/>
+			<Setter Property="Foreground" Value="#EEE"/>
+			<Setter Property="Padding" Value="6,4"/>
+			<Setter Property="Margin" Value="6,0,0,0"/>
+			<Setter Property="BorderBrush" Value="#222"/>
+			<Setter Property="BorderThickness" Value="1"/>
+			<Setter Property="FontSize" Value="11"/>
+			<Setter Property="Focusable" Value="False"/>
+			<Setter Property="Template">
+				<Setter.Value>
+					<ControlTemplate TargetType="Button">
+						<Border x:Name="bd" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="3">
+							<ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" Margin="6,2"/>
+						</Border>
+						<ControlTemplate.Triggers>
+							<Trigger Property="IsMouseOver" Value="True">
+								<Setter TargetName="bd" Property="Background" Value="#151515"/>
+								<Setter Property="BorderBrush" Value="{DynamicResource AccentBrush}"/>
+							</Trigger>
+							<Trigger Property="IsPressed" Value="True">
+								<Setter TargetName="bd" Property="Background" Value="#1AFFFFFF"/>
+							</Trigger>
+						</ControlTemplate.Triggers>
+					</ControlTemplate>
+				</Setter.Value>
+			</Setter>
+		</Style>
+
+		<Style x:Key="item_style" TargetType="ListBoxItem">
+			<Setter Property="Background" Value="Transparent"/>
+			<Setter Property="BorderThickness" Value="0"/>
+			<Setter Property="Focusable" Value="False"/>
+			<Setter Property="Template">
+				<Setter.Value>
+					<ControlTemplate TargetType="ListBoxItem">
+						<Border Background="{TemplateBinding Background}">
+							<ContentPresenter />
+						</Border>
+					</ControlTemplate>
+				</Setter.Value>
+			</Setter>
+		</Style>
+	</UserControl.Resources>
+
+	<Border BorderBrush="#111" BorderThickness="1" Background="#080808" CornerRadius="6" Padding="8">
+		<Grid>
+			<Grid.RowDefinitions>
+				<RowDefinition Height="Auto"/>
+				<RowDefinition Height="*"/>
+			</Grid.RowDefinitions>
+
+			<TextBlock Text="PLAYERS" FontSize="13" FontWeight="Bold" Foreground="White" Margin="4"/>
+
+			<Border Grid.Row="1" Background="#0A0A0A" BorderBrush="#111" BorderThickness="1" CornerRadius="4" Padding="8" Margin="0,8,0,0">
+				<ListBox x:Name="plist" Background="#070707" BorderThickness="0" Foreground="White" HorizontalContentAlignment="Stretch" ItemContainerStyle="{StaticResource item_style}"/>
+			</Border>
+		</Grid>
+	</Border>
+</UserControl>
