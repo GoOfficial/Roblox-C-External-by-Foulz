@@ -205,7 +205,7 @@ namespace FoulzExternal.features.games.universal.aiming.silent
                 ptr = SDKInstance.Mem.ReadPtr(p.Address + Offsets.BasePart.Primitive);
                 if (ptr != 0) cache[p.Address] = ptr;
             }
-            return ptr != 0 ? SDKInstance.Mem.Read<Vector3>(ptr + Offsets.BasePart.Position) : new Vector3();
+            return ptr != 0 ? SDKInstance.Mem.Read<Vector3>(ptr + Offsets.Primitive.Position) : new Vector3();
         }
 
         private static Vector3 get_pred(RobloxPlayer p, Options.Silent s, Dictionary<long, long> cache)
@@ -218,7 +218,7 @@ namespace FoulzExternal.features.games.universal.aiming.silent
                 long prim = SDKInstance.Mem.ReadPtr(root.Address + Offsets.BasePart.Primitive);
                 if (prim != 0)
                 {
-                    var vel = SDKInstance.Mem.Read<Vector3>(prim + Offsets.BasePart.AssemblyLinearVelocity);
+                    var vel = SDKInstance.Mem.Read<Vector3>(prim + Offsets.Primitive.AssemblyLinearVelocity);
                     float px = s.PredictionX != 0 ? (2.1f - s.PredictionX) : 0.0f;
                     float py = s.PredictionY != 0 ? (2.1f - s.PredictionY) : 0.0f;
 

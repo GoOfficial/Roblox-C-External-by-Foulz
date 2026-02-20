@@ -1,0 +1,8 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/.vs
+/src/.vs/FoulzExternal
+/src/FoulzExternal/bin/Debug/net8.0-windows7.0
+/src/FoulzExternal/obj

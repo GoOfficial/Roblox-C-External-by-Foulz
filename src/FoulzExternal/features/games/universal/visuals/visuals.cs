@@ -237,7 +237,7 @@ namespace FoulzExternal.games.universal.visuals
                 ptr = SDKInstance.Mem.ReadPtr(i.Address + Offsets.BasePart.Primitive);
                 if (ptr != 0) c[i.Address] = ptr;
             }
-            return ptr != 0 ? SDKInstance.Mem.Read<Vector3>(ptr + Offsets.BasePart.Position) : new Vector3();
+            return ptr != 0 ? SDKInstance.Mem.Read<Vector3>(ptr + Offsets.Primitive.Position) : new Vector3();
         }
     }
 }

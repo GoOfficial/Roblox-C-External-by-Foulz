@@ -123,7 +123,7 @@ namespace FoulzExternal.features.games.universal.playerlist
                     await Task.Run(() => {
                         for (int i = 0; i < 6; i++)
                         {
-                            mem.Write(prim + Offsets.BasePart.Position, pos);
+                            mem.Write(prim + Offsets.Primitive.Position, pos);
                             Thread.Sleep(12);
                         }
                     });

@@ -93,14 +93,14 @@ namespace FoulzExternal.features.games.universal.desync
                         held = true;
                         is_active = true;
                         lock (safety) spawn = get_coords();
-                        try { SDK.Instance.Mem.Write<bool>(SDK.Instance.Mem.Base + FFlags.NextGenReplicatorEnabledWrite4, true); } catch { }
+                        try { SDK.Instance.Mem.Write<bool>(SDK.Instance.Mem.Base + FFlagOffsets.FFlags.NextGenReplicatorEnabledWrite4, true); } catch { }
                     }
                     else if (!key && held)
                     {
                         held = false;
                         is_active = false;
                         lock (safety) spawn = new();
-                        try { SDK.Instance.Mem.Write<bool>(SDK.Instance.Mem.Base + FFlags.NextGenReplicatorEnabledWrite4, false); } catch { }
+                        try { SDK.Instance.Mem.Write<bool>(SDK.Instance.Mem.Base + FFlagOffsets.FFlags.NextGenReplicatorEnabledWrite4, false); } catch { }
                     }
 
                     Thread.Sleep(30);
@@ -108,7 +108,7 @@ namespace FoulzExternal.features.games.universal.desync
                 catch { Thread.Sleep(100); }
             }
 
-            try { SDK.Instance.Mem.Write<bool>(SDK.Instance.Mem.Base + FFlags.NextGenReplicatorEnabledWrite4, false); } catch { }
+            try { SDK.Instance.Mem.Write<bool>(SDK.Instance.Mem.Base + FFlagOffsets.FFlags.NextGenReplicatorEnabledWrite4, false); } catch { }
             is_active = false;
             lock (safety) spawn = new();
         }

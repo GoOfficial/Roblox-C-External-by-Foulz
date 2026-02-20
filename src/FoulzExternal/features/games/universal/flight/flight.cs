@@ -108,9 +108,9 @@ namespace FoulzExternal.features.games.universal.flight
 
                         float speed = Options.Settings.Flight.VFlightSpeed;
                         if (trying_to_move)
-                            SDK.Instance.Mem.Write<Vector3>(physics_addr + Offsets.BasePart.AssemblyLinearVelocity, direction * speed);
+                            SDK.Instance.Mem.Write<Vector3>(physics_addr + Offsets.Primitive.AssemblyLinearVelocity, direction * speed);
                         else
-                            SDK.Instance.Mem.Write<Vector3>(physics_addr + Offsets.BasePart.AssemblyLinearVelocity, new Vector3 { x = 0f, y = 0f, z = 0f });
+                            SDK.Instance.Mem.Write<Vector3>(physics_addr + Offsets.Primitive.AssemblyLinearVelocity, new Vector3 { x = 0f, y = 0f, z = 0f });
                     }
                     catch { }
                 }

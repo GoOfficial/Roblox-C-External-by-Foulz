@@ -107,7 +107,7 @@ namespace FoulzExternal.games.universal.aiming
                     if (lRoot.IsValid)
                     {
                         long lptr = SDKInstance.Mem.ReadPtr(lRoot.Address + Offsets.BasePart.Primitive);
-                        if (lptr != 0) lPos = SDKInstance.Mem.Read<Vector3>(lptr + Offsets.BasePart.Position);
+                        if (lptr != 0) lPos = SDKInstance.Mem.Read<Vector3>(lptr + Offsets.Primitive.Position);
                     }
 
                     float dx = worldPos.x - lPos.x;
@@ -138,7 +138,7 @@ namespace FoulzExternal.games.universal.aiming
                 long prim = SDKInstance.Mem.ReadPtr(part.Address + Offsets.BasePart.Primitive);
                 if (prim != 0)
                 {
-                    var vel = SDKInstance.Mem.Read<Vector3>(prim + Offsets.BasePart.AssemblyLinearVelocity);
+                    var vel = SDKInstance.Mem.Read<Vector3>(prim + Offsets.Primitive.AssemblyLinearVelocity);
                     float px = s.PredictionX != 0 ? (2.1f - s.PredictionX) : 0.0f;
                     float py = s.PredictionY != 0 ? (2.1f - s.PredictionY) : 0.0f;
 
@@ -296,7 +296,7 @@ namespace FoulzExternal.games.universal.aiming
                 ptr = SDKInstance.Mem.ReadPtr(p.Address + Offsets.BasePart.Primitive);
                 if (ptr != 0) cache[p.Address] = ptr;
             }
-            return ptr != 0 ? SDKInstance.Mem.Read<Vector3>(ptr + Offsets.BasePart.Position) : new Vector3();
+            return ptr != 0 ? SDKInstance.Mem.Read<Vector3>(ptr + Offsets.Primitive.Position) : new Vector3();
         }
 
         private static float get_clear(SDKInstance i) => i.IsValid ? SDKInstance.Mem.Read<float>(i.Address + 0x6C) : 0f;
