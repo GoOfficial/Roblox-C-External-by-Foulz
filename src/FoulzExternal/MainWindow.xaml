@@ -880,6 +880,91 @@
                         </StackPanel>
 
                         <StackPanel Visibility="{Binding IsChecked, ElementName=SettingsTab, Converter={StaticResource BooleanToVisibilityConverter}}">
+                            <TextBlock Text="CONFIGURATION" Foreground="#333" FontSize="10" FontWeight="Bold" Margin="0,0,0,15"/>
+                            <StackPanel Margin="0,0,0,30">
+                                <TextBlock Text="Config Name:" Foreground="#888" FontSize="10" Margin="0,0,0,5"/>
+                                <Grid Margin="0,0,0,10">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBox x:Name="ConfigNameTextBox" Grid.Column="0" Height="30" Padding="8,0" VerticalContentAlignment="Center" Background="#0A0A0A" BorderBrush="#111" BorderThickness="1" Foreground="White" FontSize="11" Text="default"/>
+                                    <ComboBox x:Name="ConfigListCombo" Grid.Column="0" Height="30" Padding="8,0" VerticalContentAlignment="Center" Background="#0A0A0A" BorderBrush="#111" BorderThickness="1" Foreground="White" FontSize="11" SelectionChanged="ConfigListCombo_SelectionChanged" Visibility="Collapsed" HorizontalContentAlignment="Left">
+                                        <ComboBox.Template>
+                                            <ControlTemplate TargetType="ComboBox">
+                                                <Grid>
+                                                    <ToggleButton x:Name="ToggleButton" Grid.Column="2" Focusable="False" IsChecked="{Binding Path=IsDropDownOpen,Mode=TwoWay,RelativeSource={RelativeSource TemplatedParent}}" ClickMode="Press" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}">
+                                                        <Grid>
+                                                            <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition/>
+                                                                <ColumnDefinition Width="20"/>
+                                                            </Grid.ColumnDefinitions>
+                                                            <ContentPresenter x:Name="ContentSite" IsHitTestVisible="False" Content="{TemplateBinding SelectionBoxItem}" ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}" ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}" Margin="3,3,23,3" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+                                                            <Path x:Name="Arrow" Grid.Column="1" Fill="White" HorizontalAlignment="Center" VerticalAlignment="Center" Data="M 0 0 L 4 4 L 8 0 Z"/>
+                                                        </Grid>
+                                                    </ToggleButton>
+                                                    <TextBox x:Name="PART_EditableTextBox" Style="{x:Null}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="3,3,23,3" Focusable="True" Background="Transparent" Visibility="Hidden" IsReadOnly="{TemplateBinding IsReadOnly}"/>
+                                                    <Popup x:Name="Popup" Placement="Bottom" IsOpen="{TemplateBinding IsDropDownOpen}" AllowsTransparency="True" Focusable="False" PopupAnimation="Slide">
+                                                        <Grid x:Name="DropDown" SnapsToDevicePixels="True" MinWidth="{TemplateBinding ActualWidth}" MaxHeight="{TemplateBinding MaxDropDownHeight}">
+                                                            <Border x:Name="DropDownBorder" Background="#0A0A0A" BorderThickness="1" BorderBrush="#111" CornerRadius="3">
+                                                                <ScrollViewer Margin="4,6,4,6" SnapsToDevicePixels="True">
+                                                                    <StackPanel IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Contained"/>
+                                                                </ScrollViewer>
+                                                            </Border>
+                                                        </Grid>
+                                                    </Popup>
+                                                </Grid>
+                                                <ControlTemplate.Triggers>
+                                                    <Trigger Property="IsEditable" Value="true">
+                                                        <Setter Property="IsTabStop" Value="false"/>
+                                                        <Setter TargetName="PART_EditableTextBox" Property="Visibility" Value="Visible"/>
+                                                        <Setter TargetName="ContentSite" Property="Visibility" Value="Hidden"/>
+                                                    </Trigger>
+                                                </ControlTemplate.Triggers>
+                                            </ControlTemplate>
+                                        </ComboBox.Template>
+                                        <ComboBox.ItemContainerStyle>
+                                            <Style TargetType="ComboBoxItem">
+                                                <Setter Property="Background" Value="Transparent"/>
+                                                <Setter Property="Foreground" Value="White"/>
+                                                <Setter Property="Padding" Value="8,4"/>
+                                                <Setter Property="HorizontalContentAlignment" Value="Left"/>
+                                                <Setter Property="Template">
+                                                    <Setter.Value>
+                                                        <ControlTemplate TargetType="ComboBoxItem">
+                                                            <Border x:Name="Bd" Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}">
+                                                                <ContentPresenter />
+                                                            </Border>
+                                                            <ControlTemplate.Triggers>
+                                                                <Trigger Property="IsMouseOver" Value="True">
+                                                                    <Setter TargetName="Bd" Property="Background" Value="#1E1E1E"/>
+                                                                </Trigger>
+                                                                <Trigger Property="IsSelected" Value="True">
+                                                                    <Setter TargetName="Bd" Property="Background" Value="#1E1E1E"/>
+                                                                    <Setter Property="Foreground" Value="White"/>
+                                                                </Trigger>
+                                                            </ControlTemplate.Triggers>
+                                                        </ControlTemplate>
+                                                    </Setter.Value>
+                                                </Setter>
+                                            </Style>
+                                        </ComboBox.ItemContainerStyle>
+                                    </ComboBox>
+                                    <Button x:Name="ToggleConfigListButton" Grid.Column="1" Content="▼" Width="30" Height="30" Margin="5,0,0,0" Click="ToggleConfigList_Click" Style="{StaticResource axiom_btn_bruh}"/>
+                                </Grid>
+                                <UniformGrid Columns="3" Margin="0,0,0,10">
+                                    <Button Content="SAVE CONFIG" Click="SaveConfig_Click" Style="{StaticResource axiom_btn_bruh}" Height="35" Margin="0,0,5,0"/>
+                                    <Button Content="LOAD CONFIG" Click="LoadConfig_Click" Style="{StaticResource axiom_btn_bruh}" Height="35" Margin="5,0,5,0"/>
+                                    <Button Content="RESET DEFAULTS" Click="ResetDefaults_Click" Style="{StaticResource axiom_btn_bruh}" Height="35" Margin="5,0,0,0"/>
+                                </UniformGrid>
+                                <UniformGrid Columns="2" Margin="0,0,0,10">
+                                    <Button Content="SET AS DEFAULT" Click="SetDefaultConfig_Click" Style="{StaticResource axiom_btn_bruh}" Height="35" Margin="0,0,5,0"/>
+                                    <Button Content="DELETE CONFIG" Click="DeleteConfig_Click" Style="{StaticResource axiom_btn_bruh}" Height="35" Margin="5,0,0,0"/>
+                                </UniformGrid>
+                                <TextBlock x:Name="DefaultConfigText" Text="No default config set" Foreground="#666" FontSize="10" Margin="0,5,0,0"/>
+                                <Button Content="OPEN CONFIG FOLDER" Click="OpenConfigFolder_Click" Style="{StaticResource axiom_btn_bruh}" Height="30" Width="180" HorizontalAlignment="Left" Margin="0,10,0,0"/>
+                            </StackPanel>
+                            
                             <TextBlock Text="INTERFACE CUSTOMIZATION" Foreground="#333" FontSize="10" FontWeight="Bold" Margin="0,0,0,15"/>
                             <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
                                 <Button Width="35" Height="35" Background="White" Click="whiteplz" Margin="0,0,10,0"/>

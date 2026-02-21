@@ -12,6 +12,7 @@ using FoulzExternal.SDK;
 using FoulzExternal.SDK.caches;
 using FoulzExternal.SDK.tphandler;
 using FoulzExternal.storage;
+using FoulzExternal.config;
 using Options;
 using System;
 using System.IO;
@@ -47,8 +48,51 @@ namespace FoulzExternal
             _ping = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(500) };
             _ping.Tick += (s, e) => { };
             Loaded += loaddat;
+            Loaded += LoadDefaultConfigOnStartup;
             this.PreviewKeyDown += mainwindow_keydown;
             this.PreviewMouseDown += mainwindow_previousmousedown;
+        }
+
+        private void LoadDefaultConfigOnStartup(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                if (ConfigManager.LoadDefaultConfig())
+                {
+                    string defaultConfig = ConfigManager.GetDefaultConfigName();
+                    LogsWindow.Log("[Config] Loaded default config on startup: {0}", defaultConfig);
+                    _shutup = true;
+                    loaddat(sender, e);
+                    _shutup = false;
+                }
+                UpdateDefaultConfigDisplay();
+            }
+            catch (Exception ex)
+            {
+                LogsWindow.Log("[Config] Error loading default config on startup: {0}", ex.Message);
+            }
+        }
+
+        private void UpdateDefaultConfigDisplay()
+        {
+            try
+            {
+                if (DefaultConfigText != null)
+                {
+                    string defaultConfig = ConfigManager.GetDefaultConfigName();
+                    if (!string.IsNullOrEmpty(defaultConfig))
+                    {
+                        DefaultConfigText.Text = $"Default config: {defaultConfig}";
+                        DefaultConfigText.Foreground = new SolidColorBrush(Color.FromRgb(100, 200, 100));
+                    }
+                    else
+                    {
+                        DefaultConfigText.Text = "No default config set";
+                        DefaultConfigText.Foreground = new SolidColorBrush(Color.FromRgb(100, 100, 100));
+                    }
+                }
+            }
+            catch { }
         }
 
         private void loaddat(object sender, RoutedEventArgs e)
@@ -570,6 +614,231 @@ namespace FoulzExternal
         private void silentpredx(object sender, RoutedPropertyChangedEventArgs<double> e) { if (_shutup || SilentPredictionXSlider == null) return; Options.Settings.Silent.PredictionX = (float)SilentPredictionXSlider.Value; if (SilentPredictionXValueText != null) SilentPredictionXValueText.Text = Options.Settings.Silent.PredictionX.ToString("0"); }
         private void silentpredy(object sender, RoutedPropertyChangedEventArgs<double> e) { if (_shutup || SilentPredictionYSlider == null) return; Options.Settings.Silent.PredictionY = (float)SilentPredictionYSlider.Value; if (SilentPredictionYValueText != null) SilentPredictionYValueText.Text = Options.Settings.Silent.PredictionY.ToString("0"); }
         private void silentkey(object sender, RoutedEventArgs e) { if (_shutup) return; var kb = Options.Settings.Silent.SilentAimbotKey; if (kb == null) return; kb.Waiting = true; if (SilentAimbotKeyButton != null) SilentAimbotKeyButton.Content = "PRESS..."; }
+
+        // Configuration Management
+        private void SaveConfig_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                string configName = ConfigNameTextBox?.Text?.Trim();
+                if (string.IsNullOrEmpty(configName))
+                {
+                    configName = "default";
+                }
+
+                if (ConfigManager.SaveConfig(configName))
+                {
+                    RefreshConfigList();
+                    UpdateDefaultConfigDisplay();
+                    LogsWindow.Log("[Config] Saved configuration: {0}", configName);
+                    notify.Notify("Config saved", $"Configuration '{configName}' saved successfully", 2000);
+                }
+                else
+                {
+                    notify.Notify("Save failed", $"Failed to save configuration '{configName}'", 2000);
+                }
+            }
+            catch (Exception ex)
+            {
+                LogsWindow.Log("[Config] Error saving config: {0}", ex.Message);
+            }
+        }
+
+        private void LoadConfig_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                string configName = ConfigNameTextBox?.Text?.Trim();
+                if (string.IsNullOrEmpty(configName))
+                {
+                    configName = "default";
+                }
+
+                if (ConfigManager.LoadConfig(configName))
+                {
+                    _shutup = true;
+                    loaddat(sender, e);
+                    _shutup = false;
+                    LogsWindow.Log("[Config] Loaded configuration: {0}", configName);
+                    notify.Notify("Config loaded", $"Configuration '{configName}' loaded successfully", 2000);
+                }
+                else
+                {
+                    notify.Notify("Load failed", $"Failed to load configuration '{configName}'", 2000);
+                }
+            }
+            catch (Exception ex)
+            {
+                LogsWindow.Log("[Config] Error loading config: {0}", ex.Message);
+            }
+        }
+
+        private void ResetDefaults_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                ConfigManager.ResetToDefaults();
+                _shutup = true;
+                loaddat(sender, e);
+                _shutup = false;
+                LogsWindow.Log("[Config] Settings reset to defaults");
+                notify.Notify("Reset complete", "All settings reset to default values", 2000);
+            }
+            catch (Exception ex)
+            {
+                LogsWindow.Log("[Config] Error resetting to defaults: {0}", ex.Message);
+            }
+        }
+
+        private void DeleteConfig_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                string configName = ConfigNameTextBox?.Text?.Trim();
+                if (string.IsNullOrEmpty(configName))
+                {
+                    notify.Notify("Invalid name", "Please enter a config name to delete", 2000);
+                    return;
+                }
+
+                if (ConfigManager.DeleteConfig(configName))
+                {
+                    RefreshConfigList();
+                    // If deleted config was the default, clear it
+                    string defaultConfig = ConfigManager.GetDefaultConfigName();
+                    if (defaultConfig != null && defaultConfig.Equals(configName, StringComparison.OrdinalIgnoreCase))
+                    {
+                        ConfigManager.SetDefaultConfigName(null);
+                    }
+                    UpdateDefaultConfigDisplay();
+                    if (ConfigNameTextBox != null) ConfigNameTextBox.Text = "";
+                    LogsWindow.Log("[Config] Deleted configuration: {0}", configName);
+                    notify.Notify("Config deleted", $"Configuration '{configName}' deleted", 2000);
+                }
+                else
+                {
+                    notify.Notify("Delete failed", $"Configuration '{configName}' not found", 2000);
+                }
+            }
+            catch (Exception ex)
+            {
+                LogsWindow.Log("[Config] Error deleting config: {0}", ex.Message);
+            }
+        }
+
+        private void ToggleConfigList_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                if (ConfigListCombo != null && ConfigNameTextBox != null)
+                {
+                    bool showList = ConfigListCombo.Visibility == System.Windows.Visibility.Collapsed;
+                    ConfigListCombo.Visibility = showList ? System.Windows.Visibility.Visible : System.Windows.Visibility.Collapsed;
+                    ConfigNameTextBox.Visibility = showList ? System.Windows.Visibility.Collapsed : System.Windows.Visibility.Visible;
+                    
+                    if (showList)
+                    {
+                        RefreshConfigList();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                LogsWindow.Log("[Config] Error toggling config list: {0}", ex.Message);
+            }
+        }
+
+        private void ConfigListCombo_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            try
+            {
+                if (ConfigListCombo != null && ConfigListCombo.SelectedItem is ComboBoxItem item)
+                {
+                    string configName = item.Content?.ToString();
+                    if (!string.IsNullOrEmpty(configName) && ConfigNameTextBox != null)
+                    {
+                        ConfigNameTextBox.Text = configName;
+                    }
+                }
+            }
+            catch { }
+        }
+
+        private void SetDefaultConfig_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                string configName = ConfigNameTextBox?.Text?.Trim();
+                if (string.IsNullOrEmpty(configName))
+                {
+                    notify.Notify("Invalid name", "Please enter a config name to set as default", 2000);
+                    return;
+                }
+
+                // Verify config exists
+                string[] configs = ConfigManager.GetAvailableConfigs();
+                if (!Array.Exists(configs, c => c.Equals(configName, StringComparison.OrdinalIgnoreCase)))
+                {
+                    notify.Notify("Config not found", $"Configuration '{configName}' does not exist. Save it first.", 2000);
+                    return;
+                }
+
+                if (ConfigManager.SetDefaultConfigName(configName))
+                {
+                    UpdateDefaultConfigDisplay();
+                    LogsWindow.Log("[Config] Set default config: {0}", configName);
+                    notify.Notify("Default set", $"'{configName}' is now the default config", 2000);
+                }
+                else
+                {
+                    notify.Notify("Failed", $"Failed to set '{configName}' as default", 2000);
+                }
+            }
+            catch (Exception ex)
+            {
+                LogsWindow.Log("[Config] Error setting default config: {0}", ex.Message);
+            }
+        }
+
+        private void OpenConfigFolder_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                string configDir = ConfigManager.GetConfigDirectory();
+                System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
+                {
+                    FileName = "explorer.exe",
+                    Arguments = configDir,
+                    UseShellExecute = true
+                });
+                LogsWindow.Log("[Config] Opened config folder: {0}", configDir);
+            }
+            catch (Exception ex)
+            {
+                LogsWindow.Log("[Config] Error opening config folder: {0}", ex.Message);
+                notify.Notify("Error", "Failed to open config folder", 2000);
+            }
+        }
+
+        private void RefreshConfigList()
+        {
+            try
+            {
+                if (ConfigListCombo == null) return;
+
+                ConfigListCombo.Items.Clear();
+                string[] configs = ConfigManager.GetAvailableConfigs();
+                
+                foreach (string config in configs)
+                {
+                    ConfigListCombo.Items.Add(new ComboBoxItem { Content = config });
+                }
+            }
+            catch (Exception ex)
+            {
+                LogsWindow.Log("[Config] Error refreshing config list: {0}", ex.Message);
+            }
+        }
     }
 
 }
