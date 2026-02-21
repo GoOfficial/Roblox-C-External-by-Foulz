@@ -33,4 +33,6 @@
 - [.NET 8.0 Runtime](https://dotnet.microsoft.com/en-us/download/dotnet/8.0) (To run) (maybe, i don't think I had it but if you sell it to people and they run it, they may need it, not sure)
 - Visual Studio 2022
 
-![UI Showcase](https://i.imgur.com/qeTabR5.png)
+![UI Showcase](https://i.imgur.com/qeTabR5.png)ç
+added a config system
+
