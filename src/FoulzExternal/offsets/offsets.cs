@@ -1,4 +1,4 @@
-﻿//UPDATE OFFSETS FROM: https://imtheo.lol/Offsets/Offsets.cs
+//UPDATE OFFSETS FROM: https://imtheo.lol/Offsets/Offsets.cs
 
 // =============================================================
 //                       RbxDumperV2                            
@@ -61,6 +61,9 @@ namespace Offsets
         public const long Primitive = 0x148;
         public const long Shape = 0x1b1;
         public const long Transparency = 0xf0;
+        public const long AssemblyLinearVelocity = 0xf0;
+        public const long Position = 0xe4;
+        public const long Size = 0x1b0;
     }
 
     public static class BloomEffect
@@ -164,6 +167,10 @@ namespace Offsets
         public const long AbsoluteSize = 0x118;
     }
 
+    public static class FFlags
+    {
+        public const long NextGenReplicatorEnabledWrite4 = 0x7a13280;
+    }
     public static class GuiObject
     {
         public const long BackgroundColor3 = 0x548;
@@ -359,13 +366,10 @@ namespace Offsets
     public static class Primitive
     {
         public const long AssemblyAngularVelocity = 0xfc;
-        public const long AssemblyLinearVelocity = 0xf0;
         public const long Flags = 0x1ae;
         public const long Material = 0x248;
         public const long Owner = 0x210;
-        public const long Position = 0xe4;
         public const long Rotation = 0xc0;
-        public const long Size = 0x1b0;
         public const long Validate = 0x6;
     }
 
@@ -459,6 +463,7 @@ namespace Offsets
     public static class StatsItem
     {
         public const long Value = 0xc8;
+        public const long Ping = 0xc8;
     }
 
     public static class SunRaysEffect
