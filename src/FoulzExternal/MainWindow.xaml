@@ -1,4 +1,4 @@
-﻿<Window x:Class="FoulzExternal.MainWindow"
+<Window x:Class="FoulzExternal.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:local="clr-namespace:FoulzExternal"
@@ -152,6 +152,7 @@
         </Style>
 
         <Style x:Key="combo_chill" TargetType="ComboBox">
+            <Setter Property="FocusVisualStyle" Value="{x:Null}" />
             <Setter Property="Background" Value="#0A0A0A"/>
             <Setter Property="Foreground" Value="#DDD"/>
             <Setter Property="BorderBrush" Value="#222"/>
@@ -311,10 +312,12 @@
 
                     <StackPanel Grid.Row="0" Margin="20,25,20,20">
                         <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="foulzers" FontSize="26" FontWeight="Black" Foreground="White"/>
+                            <TextBlock Text="Axiom X
+                                       " FontSize="26" FontWeight="Black" Foreground="White"/>
                             <TextBlock Text="C#" FontSize="26" FontWeight="Black" Foreground="{DynamicResource AccentBrush}" Margin="5,0,0,0"/>
                         </StackPanel>
-                        <TextBlock Text="👅OPEN SOURCE C# EXTERNAL 👅" FontSize="9" Foreground="#444" FontWeight="Bold" Margin="2,-2,0,0"/>
+                        <TextBlock Text="👅discord.gg/rbw5
+                                   👅" FontSize="9" Foreground="#444" FontWeight="Bold" Margin="2,-2,0,0"/>
                     </StackPanel>
 
                     <StackPanel Grid.Row="1">
@@ -878,9 +881,137 @@
                         <StackPanel Visibility="{Binding IsChecked, ElementName=PlayersTab, Converter={StaticResource BooleanToVisibilityConverter}}" Margin="0,20,0,0">
                             <playerlist:PlayerListControl/>
                         </StackPanel>
-
                         <StackPanel Visibility="{Binding IsChecked, ElementName=SettingsTab, Converter={StaticResource BooleanToVisibilityConverter}}">
-                            <TextBlock Text="INTERFACE CUSTOMIZATION" Foreground="#333" FontSize="10" FontWeight="Bold" Margin="0,0,0,15"/>
+
+                            <TextBlock Text="CONFIGURATION" Foreground="#333" FontSize="10" FontWeight="Bold" Margin="0,0,0,15"/>
+
+                            <StackPanel Margin="0,0,0,30">
+
+                                <TextBlock Text="Config Name:" Foreground="#888" FontSize="10" Margin="0,0,0,5"/>
+
+                                <Grid Margin="0,0,0,10">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <TextBox x:Name="confignametext"
+                                               FocusVisualStyle="{x:Null}"
+                                               Grid.Column="0"
+                                               Height="30"
+                                               Padding="8,0"
+                                               VerticalContentAlignment="Center"
+                                               Background="#0A0A0A"
+                                               BorderBrush="#111"
+                                               BorderThickness="1"
+                                               Foreground="White"
+                                               FontSize="11"
+                                               Text="default"/>
+
+                                    <ComboBox x:Name="configlistdropdown"
+                                            FocusVisualStyle="{x:Null}"
+                                            Grid.Column="0"
+                                            Height="30"
+                                            Padding="8,0"
+                                            VerticalContentAlignment="Center"
+                                            Background="#0A0A0A"
+                                            BorderBrush="#111"
+                                            BorderThickness="1"
+                                            Foreground="White"
+                                            FontSize="11"
+                                            SelectionChanged="cfglistchanged"
+                                            Visibility="Collapsed"
+                                            HorizontalContentAlignment="Left">  
+                                        <ComboBox.Template>
+                                            <ControlTemplate TargetType="ComboBox">
+                                                <Grid>
+                                                    <Border x:Name="Bd"
+                                                        Background="{TemplateBinding Background}"
+                                                        BorderBrush="{TemplateBinding BorderBrush}"
+                                                        BorderThickness="{TemplateBinding BorderThickness}"
+                                                        CornerRadius="3">       
+                                                        <ContentPresenter x:Name="ContentSite"
+                                                                    ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
+                                                                    Content="{TemplateBinding SelectionBoxItem}"
+                                                                    VerticalAlignment="Center"
+                                                                    HorizontalAlignment="Left"
+                                                                    Margin="8,0,4,0"/>
+                                                                </Border>
+                                                                <Popup x:Name="Popup"
+                                                                    Placement="Bottom"
+                                                                    IsOpen="{TemplateBinding IsDropDownOpen}"
+                                                                    AllowsTransparency="True"
+                                                                    Focusable="False"
+                                                                    PopupAnimation="Fade"
+                                                                    MinWidth="{Binding ActualWidth, RelativeSource={RelativeSource TemplatedParent}}"
+                                                                    StaysOpen="False">
+                                                        <Border Background="#0A0A0A" BorderBrush="#222" BorderThickness="1" CornerRadius="3" Padding="4">
+                                                            <ScrollViewer CanContentScroll="True" HorizontalScrollBarVisibility="Disabled">
+                                                                <StackPanel IsItemsHost="True"/>
+                                                            </ScrollViewer>
+                                                        </Border>
+                                                    </Popup>
+                                                </Grid>
+                                                <ControlTemplate.Triggers>
+                                                    <Trigger Property="IsEnabled" Value="False">
+                                                        <Setter TargetName="Bd" Property="Opacity" Value="0.5"/>
+                                                    </Trigger>
+                                                    <Trigger Property="IsMouseOver" Value="True">
+                                                        <Setter TargetName="Bd" Property="BorderBrush" Value="#222"/>
+                                                        <Setter TargetName="Bd" Property="BorderThickness" Value="1"/>
+                                                    </Trigger>
+                                                    <Trigger Property="IsFocused" Value="True">
+                                                        <Setter TargetName="Bd" Property="BorderBrush" Value="#222"/>
+                                                        <Setter TargetName="Bd" Property="BorderThickness" Value="1"/>
+                                                    </Trigger>
+                                                </ControlTemplate.Triggers>
+                                            </ControlTemplate>
+                                        </ComboBox.Template>
+                                    </ComboBox>
+
+                                    <Button x:Name="toggleconfiglist"
+                                              FocusVisualStyle="{x:Null}"
+                                              Grid.Column="1"
+                                              Content="▼"
+                                              Width="30"
+                                              Height="30"
+                                              Margin="5,0,0,0"
+                                              Click="togglecfglist"
+                                              Style="{StaticResource axiom_btn_bruh}"/>
+                                </Grid>
+
+                                <UniformGrid Columns="3" Margin="0,0,0,10">
+                                    <Button Content="SAVE CONFIG" Click="savecfg" Style="{StaticResource axiom_btn_bruh}" Height="35" Margin="0,0,5,0"/>
+                                    <Button Content="LOAD CONFIG" Click="loadcfg" Style="{StaticResource axiom_btn_bruh}" Height="35" Margin="5,0,5,0"/>
+                                    <Button Content="RESET DEFAULTS" Click="resetcfg" Style="{StaticResource axiom_btn_bruh}" Height="35" Margin="5,0,0,0"/>
+                                </UniformGrid>
+
+                                <UniformGrid Columns="2" Margin="0,0,0,10">
+                                    <Button Content="SET AS DEFAULT" Click="setdefaultcfg" Style="{StaticResource axiom_btn_bruh}" Height="35" Margin="0,0,5,0"/>
+                                    <Button Content="DELETE CONFIG" Click="deletecfg" Style="{StaticResource axiom_btn_bruh}" Height="35" Margin="5,0,0,0"/>
+                                </UniformGrid>
+
+                                <TextBlock x:Name="defconfigtext"
+                                             Text="No default config set"
+                                             Foreground="#666"
+                                             FontSize="10"
+                                             Margin="0,5,0,0"/>
+
+                                <Button Content="OPEN CONFIG FOLDER"
+                                          Click="opencfgfolder"
+                                          Style="{StaticResource axiom_btn_bruh}"
+                                          Height="30"
+                                          Width="180"
+                                          HorizontalAlignment="Left"
+                                         Margin="0,10,0,0"/>
+                            </StackPanel>
+
+                            <TextBlock Text="INTERFACE CUSTOMIZATION"
+                                         Foreground="#333"
+                                         FontSize="10"
+                                         FontWeight="Bold"
+                                         Margin="0,0,0,15"/>
+
                             <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
                                 <Button Width="35" Height="35" Background="White" Click="whiteplz" Margin="0,0,10,0"/>
                                 <Button Width="35" Height="35" Background="Cyan" Click="cyanplz" Margin="0,0,10,0"/>
@@ -888,7 +1019,13 @@
                                 <Button Width="35" Height="35" Background="MediumPurple" Click="purpleplz" Margin="0,0,10,0"/>
                                 <Button Width="35" Height="35" Background="LimeGreen" Click="greenplz" Margin="0,0,10,0"/>
                             </StackPanel>
-                            <Button Content="OPEN DEBUG CONSOLE" Click="showlogs" Style="{StaticResource axiom_btn_bruh}" Height="35" Width="180" HorizontalAlignment="Left"/>
+
+                            <Button Content="OPEN DEBUG CONSOLE"
+                                Click="showlogs"
+                                Style="{StaticResource axiom_btn_bruh}"
+                                Height="35"
+                                Width="180"
+                                HorizontalAlignment="Left"/>
                         </StackPanel>
                     </Grid>
                 </ScrollViewer>
