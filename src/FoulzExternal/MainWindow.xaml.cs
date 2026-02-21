@@ -1,4 +1,5 @@
-﻿using FoulzExternal.features.games.universal.aiming.silent;
+using FoulzExternal.config;
+using FoulzExternal.features.games.universal.aiming.silent;
 using FoulzExternal.features.games.universal.camera;
 using FoulzExternal.features.games.universal.desync;
 using FoulzExternal.features.games.universal.flight;
@@ -49,6 +50,54 @@ namespace FoulzExternal
             Loaded += loaddat;
             this.PreviewKeyDown += mainwindow_keydown;
             this.PreviewMouseDown += mainwindow_previousmousedown;
+        }
+
+        private void loaddfaultonstart(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                if (ConfigManager.LoadDefaultConfig())
+                {
+                    string def = ConfigManager.GetDefaultConfigName();
+                    LogsWindow.Log("[Config] Loaded default config on startup: {0}", def);
+
+                    _shutup = true;
+                    loaddat(sender, e);
+                    _shutup = false;
+                }
+
+                updatedefaulttext();
+            }
+            catch (Exception ex)
+            {
+                LogsWindow.Log("[Config] Error loading default config on startup: {0}", ex.Message);
+            }
+        }
+
+        private void updatedefaulttext()
+        {
+            try
+            {
+                if (defconfigtext == null)
+                    return;
+
+                string def = ConfigManager.GetDefaultConfigName();
+
+                if (!string.IsNullOrEmpty(def))
+                {
+                    defconfigtext.Text = $"Default config: {def}";
+                    defconfigtext.Foreground = new SolidColorBrush(Color.FromRgb(100, 200, 100));
+                }
+                else
+                {
+                    defconfigtext.Text = "No default config set";
+                    defconfigtext.Foreground = new SolidColorBrush(Color.FromRgb(100, 100, 100));
+                }
+            }
+            catch
+            {
+                // silently ignore
+            }
         }
 
         private void loaddat(object sender, RoutedEventArgs e)
@@ -570,6 +619,15 @@ namespace FoulzExternal
         private void silentpredx(object sender, RoutedPropertyChangedEventArgs<double> e) { if (_shutup || SilentPredictionXSlider == null) return; Options.Settings.Silent.PredictionX = (float)SilentPredictionXSlider.Value; if (SilentPredictionXValueText != null) SilentPredictionXValueText.Text = Options.Settings.Silent.PredictionX.ToString("0"); }
         private void silentpredy(object sender, RoutedPropertyChangedEventArgs<double> e) { if (_shutup || SilentPredictionYSlider == null) return; Options.Settings.Silent.PredictionY = (float)SilentPredictionYSlider.Value; if (SilentPredictionYValueText != null) SilentPredictionYValueText.Text = Options.Settings.Silent.PredictionY.ToString("0"); }
         private void silentkey(object sender, RoutedEventArgs e) { if (_shutup) return; var kb = Options.Settings.Silent.SilentAimbotKey; if (kb == null) return; kb.Waiting = true; if (SilentAimbotKeyButton != null) SilentAimbotKeyButton.Content = "PRESS..."; }
+        private void savecfg(object sender, RoutedEventArgs e) { try { string configName = confignametext?.Text?.Trim(); if (string.IsNullOrEmpty(configName)) configName = "default"; if (ConfigManager.SaveConfig(configName)) { refreshcfglist(); updatedefaulttext(); notify.Notify("Config saved", $"Configuration '{configName}' saved successfully", 2000); } else { notify.Notify("Save failed", $"Failed to save configuration '{configName}'", 2000); } } catch { } }
+        private void loadcfg(object sender, RoutedEventArgs e) { try { string configName = confignametext?.Text?.Trim(); if (string.IsNullOrEmpty(configName)) configName = "default"; if (ConfigManager.LoadConfig(configName)) { _shutup = true; loaddat(sender, e); _shutup = false; notify.Notify("Config loaded", $"Configuration '{configName}' loaded successfully", 2000); } else { notify.Notify("Load failed", $"Failed to load configuration '{configName}'", 2000); } } catch { } }
+        private void resetcfg(object sender, RoutedEventArgs e) { try { ConfigManager.ResetToDefaults(); _shutup = true; loaddat(sender, e); _shutup = false; notify.Notify("Reset complete", "All settings reset to default values", 2000); } catch { } }
+        private void deletecfg(object sender, RoutedEventArgs e) { try { string configName = confignametext?.Text?.Trim(); if (string.IsNullOrEmpty(configName)) { notify.Notify("Invalid name", "Please enter a config name to delete", 2000); return; } if (ConfigManager.DeleteConfig(configName)) { refreshcfglist(); string defaultConfig = ConfigManager.GetDefaultConfigName(); if (defaultConfig != null && defaultConfig.Equals(configName, StringComparison.OrdinalIgnoreCase)) ConfigManager.SetDefaultConfigName(null); updatedefaulttext(); if (confignametext != null) confignametext.Text = ""; notify.Notify("Config deleted", $"Configuration '{configName}' deleted", 2000); } else { notify.Notify("Delete failed", $"Configuration '{configName}' not found", 2000); } } catch { } }
+        private void togglecfglist(object sender, RoutedEventArgs e) { try { if (configlistdropdown != null && confignametext != null) { configlistdropdown.Visibility = Visibility.Visible; confignametext.Visibility = Visibility.Collapsed; refreshcfglist(); configlistdropdown.Focus(); configlistdropdown.IsDropDownOpen = false; configlistdropdown.IsDropDownOpen = true; } } catch { } }
+        private void cfglistchanged(object sender, SelectionChangedEventArgs e) { try { if (configlistdropdown != null && configlistdropdown.SelectedItem is ComboBoxItem item) { string configName = item.Content?.ToString(); if (!string.IsNullOrEmpty(configName) && confignametext != null) confignametext.Text = configName; } } catch { } }
+        private void setdefaultcfg(object sender, RoutedEventArgs e) { try { string configName = confignametext?.Text?.Trim(); if (string.IsNullOrEmpty(configName)) { notify.Notify("Invalid name", "Please enter a config name to set as default", 2000); return; } string[] configs = ConfigManager.GetAvailableConfigs(); if (!Array.Exists(configs, c => c.Equals(configName, StringComparison.OrdinalIgnoreCase))) { notify.Notify("Config not found", $"Configuration '{configName}' does not exist. Save it first.", 2000); return; } if (ConfigManager.SetDefaultConfigName(configName)) { updatedefaulttext(); notify.Notify("Default set", $"'{configName}' is now the default config", 2000); } else { notify.Notify("Failed", $"Failed to set '{configName}' as default", 2000); } } catch { } }
+        private void opencfgfolder(object sender, RoutedEventArgs e) { try { string configDir = ConfigManager.GetConfigDirectory(); System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo { FileName = "explorer.exe", Arguments = configDir, UseShellExecute = true }); } catch { notify.Notify("Error", "Failed to open config folder", 2000); } }
+        private void refreshcfglist() { try { if (configlistdropdown == null) return; configlistdropdown.Items.Clear(); string[] configs = ConfigManager.GetAvailableConfigs(); foreach (string config in configs) configlistdropdown.Items.Add(new ComboBoxItem { Content = config }); } catch { } }
     }
 
 }
