@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -78,7 +78,8 @@ namespace FoulzExternal.SDK
 
         public static Instance GetDataModel()
         {
-            long v1 = Mem.ReadPtr(GetVisualEngine().Address + Offsets.VisualEngine.FakeDataModel);
+            long baseAddr = FoulzExternal.storage.Storage.BaseAddress;
+            long v1 = Mem.ReadPtr(baseAddr + Offsets.FakeDataModel.Pointer);
             return new Instance(Mem.ReadPtr(v1 + Offsets.FakeDataModel.RealDataModel));
         }
 
@@ -209,13 +210,13 @@ namespace FoulzExternal.SDK
         public Vector3 GetPosition()
         {
             long prim = Mem.ReadPtr(Address + Offsets.BasePart.Primitive);
-            return Mem.Read<Vector3>(prim + Offsets.Primitive.Position);
+            return Mem.Read<Vector3>(prim + Offsets.BasePart.Position);
         }
 
         public Vector3 GetSize()
         {
             long prim = Mem.ReadPtr(Address + Offsets.BasePart.Primitive);
-            return Mem.Read<Vector3>(prim + Offsets.Primitive.Size);
+            return Mem.Read<Vector3>(prim + Offsets.BasePart.Size);
         }
 
         public sCFrame GetCFrame()
@@ -328,7 +329,7 @@ namespace FoulzExternal.SDK
                 var pingInst = perf.FindFirstChild("Ping");
                 if (!pingInst.IsValid) return -1.0;
 
-                return Mem.Read<double>(pingInst.Address + Offsets.StatsItem.Value);
+                return Mem.Read<double>(pingInst.Address + Offsets.StatsItem.Ping);
             }
             catch
             {
