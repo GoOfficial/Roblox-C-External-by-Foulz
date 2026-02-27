@@ -2,7 +2,7 @@
 
 > **Note:** This project is a work in progress. Flight is currently not working, and Wallcheck is not yet integrated. Fix these if you want! Please DO NOT SKID and GIVE ME CREDITS if you REFERENCE my source! Or ask me, and i'll be fine.
 
-## Like my work? Creators server is discord.gg/rbw5
+## Like my work? Creators server is discord.gg/rbw5 | guns.lol/foulz
 ## Want more offsets? Theo's server is: discord.gg/rbxoffsets
 
 ## 🚀 Features
