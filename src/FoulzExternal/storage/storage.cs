@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Offsets;
 using FoulzExternal.logging;
 using System.Diagnostics;
@@ -30,7 +30,6 @@ namespace FoulzExternal.storage
         public static long GameId { get; private set; }
         public static bool IsInitialized => BaseAddress != 0 && VisualEngine != 0 && DataModel != 0;
 
-
         private static long _lastLoggedBaseAddress = 0;
         private static long _lastLoggedDataModel = 0;
 
@@ -43,6 +42,25 @@ namespace FoulzExternal.storage
             try
             {
                 SInstance.Mem = m;
+
+                try
+                {
+                    string ver = SInstance.FindRobloxVersion() ?? "";
+                    RobloxVersion = ver.StartsWith("version-", StringComparison.OrdinalIgnoreCase) ? ver.Substring(8) : ver;
+                }
+                catch { RobloxVersion = ""; }
+
+                if (!Offsets.Sync.Fetch())
+                {
+                    LogsWindow.Log("[storage] CRITICAL: Offset fetch failed. Cannot continue.");
+                    return;
+                }
+
+                if (!FFlagOffsets.Sync.Fetch())
+                {
+                    LogsWindow.Log("[storage] Warning: FFlag fetch failed.");
+                }
+
                 VisualEngineInstance = SInstance.GetVisualEngine();
                 VisualEngine = VisualEngineInstance.Address;
 
@@ -65,7 +83,6 @@ namespace FoulzExternal.storage
 
                 try { LocalPlayerName = LocalPlayerInstance.IsValid ? LocalPlayerInstance.GetDisplayName() : ""; } catch { LocalPlayerName = ""; }
                 try { LocalPlayerUserId = LocalPlayerInstance.IsValid ? m.Read<long>(LocalPlayerInstance.Address + Offsets.Player.UserId) : 0; } catch { LocalPlayerUserId = 0; }
-
 
                 try
                 {
@@ -98,13 +115,6 @@ namespace FoulzExternal.storage
                     }
                     catch { }
                 }
-
-                try
-                {
-                    string ver = SInstance.FindRobloxVersion() ?? "";
-                    RobloxVersion = ver.StartsWith("version-", StringComparison.OrdinalIgnoreCase) ? ver.Substring(8) : ver;
-                }
-                catch { RobloxVersion = ""; }
 
                 try
                 {
