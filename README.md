@@ -34,6 +34,6 @@
 ## 🛠️ Requirements
 - [.NET 8.0 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/8.0) (To build)
 - [.NET 8.0 Runtime](https://dotnet.microsoft.com/en-us/download/dotnet/8.0) (To run) (maybe, i don't think I had it but if you sell it to people and they run it, they may need it, not sure)
-- Visual Studio 2022
+- Any IDE (To build)
 
 ![UI Showcase](https://i.imgur.com/qeTabR5.png)
